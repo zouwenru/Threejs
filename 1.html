@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Three.js GLTF Model Example with Local Loader</title>
+</head>
+
+<body>
+  <script type="module">
+    import * as THREE from './three.js-r168/build/three.module.js';
+    import { GLTFLoader } from './three.js-r168/examples/jsm/loaders/GLTFLoader.js';
+    window.onload = function () {
+      // 创建场景
+      const scene = new THREE.Scene();
+
+      // 创建相机
+      const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+      // 创建渲染器
+      const renderer = new THREE.WebGLRenderer();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      document.body.appendChild(renderer.domElement);
+
+      // 创建 GLTF 加载器
+      const loader = new GLTFLoader();
+
+      // 加载 glb.json 文件
+      loader.load('dystopian-police-car.glb.json', function (gltf) {
+        const model = gltf.scene;
+        scene.add(model);
+      }, function (xhr) {
+        console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
+      }, function (error) {
+        console.error(error);
+      });
+
+      camera.position.z = 5;
+
+      function animate() {
+        requestAnimationFrame(animate);
+        renderer.render(scene, camera);
+      }
+
+      animate();
+
+      // 窗口大小变化时调整相机和渲染器
+      window.addEventListener('resize', function () {
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+        renderer.setSize(width, height);
+      });
+    };
+  </script>
+</body>
+
+</html>
